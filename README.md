@@ -71,7 +71,7 @@ or
 
 Edit `<dockerid>/<imagename>` as mentioned above.
 
-*Tips for using GPU inside the container.    
+*Tips for using GPU inside the container:    
 The model image is based on pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel, which enables the container to use CUDA11.0.     
-You also need to have NVIDIA Container Toolkit installed on the host computer when building the image.        
+You also need to have NVIDIA Container Toolkit installed on the host computer before building the image.        
 Refer to https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian for installation instruction.*
