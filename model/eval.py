@@ -81,7 +81,7 @@ def main():
     
                 p_boxes, p_classes, p_scores = wrapper.predict(np.array([img]))
                 
-                #draw_prediction(nb_batch*BATCH_SIZE+nb_img,img,boxes,classes,p_boxes[0],p_classes[0],p_scores[0])
+                draw_prediction(nb_batch*BATCH_SIZE+nb_img,img,boxes,classes,p_boxes[0],p_classes[0],p_scores[0])
                 
                 for j in range(len(p_boxes)):
                     pred_boxes += make_boxes(nb_batch+nb_img, p_classes[j], p_scores[j], p_boxes[j])

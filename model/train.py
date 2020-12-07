@@ -8,17 +8,18 @@ from engine import train_one_epoch
 import model
 import utils
 
+
 class DTDataset(Dataset):
     def __init__(self, root):
         self.root=root #work dir: /home/yueshan/Desktop/AMoD/RH8/obj_detection/object-detection-ex-template
         
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.data = list(sorted(os.listdir(os.path.join(root, 'data_collection','dataset'))))
-
+        self.data = list(sorted(filter(lambda x: "npz" in x, os.listdir(os.path.join(root, 'data_collection','new_trainset')))))
+        #print(len(self.data))
     def __getitem__(self, idx):
         # load data
-        data_path = os.path.join(self.root, 'data_collection','dataset', self.data[idx])
+        data_path = os.path.join(self.root, 'data_collection','new_trainset', self.data[idx])
         data=np.load(data_path)
     
         img = data[f"arr_{0}"]
@@ -28,12 +29,15 @@ class DTDataset(Dataset):
         num_objs=boxes.shape[0]
         
         # convert everything into a torch.Tensor
-        boxes = torch.as_tensor(boxes, dtype=torch.float32)
-        labels = torch.as_tensor(classes, dtype=torch.int64)
+        if num_objs>0:
+            boxes = torch.as_tensor(boxes, dtype=torch.float32)
+            area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+        else:
+            boxes=torch.zeros((0,4))
+            area=torch.zeros(0)
+        
+        labels = torch.as_tensor(classes, dtype=torch.int64)   
         image_id = torch.tensor([idx])
-        
-        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
-        
         # suppose all instances are not crowd
         iscrowd = torch.zeros((num_objs,), dtype=torch.int64)
 
@@ -56,21 +60,19 @@ def main():
     # TODO don't forget to save the model's weights inside of `./weights`!
     # train on the GPU or on the CPU, if a GPU is not available
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    print("Using ",device)
     #device=torch.device('cpu')
     # use our dataset and defined transformations
-    #root=os.path.dirname(os.getcwd())
-    root=os.getcwd()
+    root=os.path.dirname(os.getcwd())
+    #root=os.getcwd()
     dataset = DTDataset(root)
 
     # split the dataset in train and test set
     dataset_size=len(dataset)
-    dataset_size=100
-    indices = torch.randperm(dataset_size).tolist()
-    dataset = Subset(dataset, indices[:-10])
-    
+    print(dataset_size)
     # define training and validation data loaders
     data_loader = DataLoader(
-        dataset, batch_size=5, shuffle=True, num_workers=1,collate_fn=utils.collate_fn)
+        dataset, batch_size=8, shuffle=True, num_workers=4,collate_fn=utils.collate_fn)
 
     # get the model using our helper function
     md = model.Model()
@@ -95,10 +97,11 @@ def main():
         train_one_epoch(md, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
-        # evaluate on the test dataset
-        #evaluate(model, data_loader_test, device=device)
 
-    print("That's it!")
 
+    print("Finished training!")
+    
+    torch.save(md.state_dict(), "weights/model.pt")
+    
 if __name__ == "__main__":
     main()
