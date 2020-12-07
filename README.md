@@ -16,10 +16,10 @@ The repo is consisted of 3 parts.
 ### 1. Data collection
 Edit following lines in `data_collection.py` (line 9-10)
 
-        `with makedirs("./<dataset>"):
+        with makedirs("./<dataset>"):
 
                 np.savez(f"./<dataset>/{npz_index}.npz", *(img, boxes, classes))
-        `
+        
         
 Replace `<dataset>` with dataset name that you want to use.
 
@@ -41,11 +41,11 @@ The collected images with the bounding boxes drawn will be saved in `image` fold
 
 ### 2. Model
 To train the model, edit line 17 and line 21 in the `train.py`.
-`
-self.data = list(sorted(os.listdir(os.path.join(root, 'data_collection','<dataset>'))))
 
-data_path = os.path.join(self.root, 'data_collection','<dataset>', self.data[idx])
-`
+        self.data = list(sorted(os.listdir(os.path.join(root, 'data_collection','<dataset>'))))
+
+        data_path = os.path.join(self.root, 'data_collection','<dataset>', self.data[idx])
+
 Replace `<dataset>` with dataset name that you want to use for training. Make sure the training set is stored in `data_collection` folder.
 
 To evaluate prediction result, edit line 64 in the `eval.py`.
@@ -71,7 +71,7 @@ or
 
 Edit `<dockerid>/<imagename>` as mentioned above.
 
-*Tips for using GPU inside the container.*    
-*The model image is based on pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel, which enables the container to use CUDA11.0. *    
-*You also need to have NVIDIA Container Toolkit installed on the host computer when building the image.*        
-*Refer to https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian for installation instruction.*
+*Tips for using GPU inside the container.    
+The model image is based on pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel, which enables the container to use CUDA11.0.     
+You also need to have NVIDIA Container Toolkit installed on the host computer when building the image.        
+Refer to https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian for installation instruction.*
