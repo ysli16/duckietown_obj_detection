@@ -1,4 +1,4 @@
-FROM pytorch/pytorch
+FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-devel
 RUN apt-get update && apt install libgl1-mesa-glx libglib2.0-0 -y
 RUN pip install opencv-python numpy pillow tqdm
 WORKDIR /workdir
