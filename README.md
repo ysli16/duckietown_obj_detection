@@ -31,7 +31,7 @@ The collection procedure will start and save collected data to `<dataset>` folde
 
 To visualize collected data, edit line 22 in `draw_data.py` , replace `<dataset>` with dataset name that you want to see.
 
-`coll_file=os.path.join(cur_dir,'<dataset>',str(idx)+'.npz')`
+        coll_file=os.path.join(cur_dir,'<dataset>',str(idx)+'.npz')
 
 Then run command
 
@@ -50,7 +50,7 @@ Replace `<dataset>` with dataset name that you want to use for training. Make su
 
 To evaluate prediction result, edit line 64 in the `eval.py`.
 
-`dataset_files = list(filter(lambda x: "npz" in x, os.listdir("./<testset>")))`
+        dataset_files = list(filter(lambda x: "npz" in x, os.listdir("./<testset>")))
 
 Replace `<testset>` with dataset name that you want to use for evaluation. The testset is stored in `model` folder. 
 
